@@ -43,6 +43,7 @@
         background: #fff;
         .main {
             flex: 1;
+            overflow: hidden;
             position: relative;
             .child-view {
                 position: absolute;

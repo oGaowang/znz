@@ -13,6 +13,11 @@ import my from '../pages/my'
 import AdSet from '../pages/AdSet'
 import Introduction from '../pages/Introduction'
 import IntroductDetail from '../pages/IntroductDetail'
+import CompanySetting from '../pages/CompanySetting'
+import SetcompanyName from '../components/SetcompanyName'
+import SetMember from '../components/SetMember'
+
+
 
 
 
@@ -29,7 +34,9 @@ const routes =[
     {path:'/adSet',component:AdSet,name:"adSet"},
     {path:'/introduction',component:Introduction,name:"introduction"},
     {path:'/introductDetail',component:IntroductDetail,name:"introductDetail"},
-   
+    {path:'/companySetting',component:CompanySetting,name:"companySetting"},
+    {path:'/setcompanyName',component:SetcompanyName,name:"setcompanyName"},
+    {path:'/setMember',component:SetMember,name:"setMember"},
 ]
 
 

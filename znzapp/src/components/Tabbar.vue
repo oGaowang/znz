@@ -12,11 +12,11 @@ export default {
     data(){
         return{
             tabbarList:[
-                {   icon:'iconfont icon-shouye',       text:'项目',    path:'/home'    },
-                {   icon:'iconfont icon-icon_find',    text:'消息',    path:'/find'    },
-                {   icon:'iconfont icon-search-2-copy',text:'添加项目',    path:'/works'   },
-                {   icon:'iconfont icon-gouwuchekong', text:'成员',  path:'/member'    },
-                {   icon:'iconfont icon-wode2',        text:'我的',    path:'/my'      }
+                {   icon:'iconfont icon-order',       text:'项目',    path:'/home'    },
+                {   icon:'iconfont icon-message',    text:'消息',    path:'/find'    },
+                {   icon:'iconfont icon-addition',     text:'添加项目',    path:'/works'   },
+                {   icon:'iconfont icon-group', text:'成员',  path:'/member'    },
+                {   icon:'iconfont icon-people',        text:'我的',    path:'/my'      }
             ],
             preValue:0,
             nextValue:0,
@@ -47,9 +47,9 @@ export default {
             align-items:center;
             flex:1;
             i{
-                font-size:0.36rem;
+                font-size:0.42rem;
                 display:block;
-                color:#a0a0a0;
+                color:#555050;
             }
             span{
                 font-size:0.24rem;
@@ -58,7 +58,7 @@ export default {
             }
         }
         li.active i,li.active span{
-            color:#030303;
+            color:#0066CC;
         }
     }
 </style>

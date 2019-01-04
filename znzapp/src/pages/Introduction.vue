@@ -1,7 +1,7 @@
 <template>
     <div class="introduction">
         <header>
-            <div class="back">返回</div>
+            <div class="back"  @click="$router.back(-1)">返回</div>
             <div class="title">装介绍客户</div>
             <div></div>
         </header>
