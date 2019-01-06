@@ -28,20 +28,28 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
     export default {
         data() {
             return {
                 listData: [],
             }
         },
+        computed:{
+            ...mapState({
+                organizationId:'organizationId',
+                userId:'userId',
+                version:'version'
+            })
+        },
         created() {
             this.axios({
                 method: 'get',
                 url: 'http://app.zhuangneizhu.com/third/gainOrganizationCustomerList.do',
                 params: {
-                    organizationId: 4297,
-                    userId: 5960,
-                    version: 3.4,
+                    organizationId: this.organizationId,
+                    userId: this.userId,
+                    version: this.version,
                     orderStatus: 2,
                     appType: "znz",
                 }
@@ -130,10 +138,10 @@
                    align-items:flex-end;
                    justify-content: center;
                    .followStatus{
-                       font-size:0.3rem;
-                      width:1.6rem;
-                      height:0.52rem;
-                      line-height: 0.52rem;
+                       font-size:0.24rem;
+                      width:1.4rem;
+                      height:0.4rem;
+                      line-height: 0.4rem;
                       text-align:center;
                        font-weight: 600;
                        color:#fff;
@@ -141,9 +149,11 @@
                    }
                    .followStatus.already{
                        background:#4BD863;
+                       opacity:0.8
                    }
                     .followStatus.not{
                        background:#FF3B30;
+                       opacity:0.8
                    }
                    .createTime{
                        font-size:0.26rem;

@@ -1,11 +1,12 @@
 <template>
     <div class="projectList">
         <el-table :data="templateList" style="width: 100%">
-            <el-table-column prop="imageUrl" label="模板名称" width="160">
+            <el-table-column prop="templateName" label="模板名称" width="300">
             </el-table-column>
-            <el-table-column prop="title" label="预设天数" width="160">
-            </el-table-column>
-            <el-table-column prop="describe" label="备注" width="100">
+             <el-table-column prop="operation" label="内容" width="100">
+                <template slot-scope="scope">
+                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+                </template>
             </el-table-column>
             <el-table-column prop="operation" label="操作">
                 <template slot-scope="scope">
@@ -15,12 +16,14 @@
                 </template>
             </el-table-column>
         </el-table>
+
     </div>
 </template>
 
 <script>
 import {mapState,mapMutations} from 'vuex'
     export default {
+
         data(){
             return {
                 templateList:[]
@@ -43,9 +46,10 @@ import {mapState,mapMutations} from 'vuex'
                         version:this.version
                     },
                 }).then(res=>{
-                    console.log(res)
+                   this.templateList=res.data.data;
+                   console.log(this.templateList)
                 })
-            }
+            },
         },
         computed:{
             ...mapState([

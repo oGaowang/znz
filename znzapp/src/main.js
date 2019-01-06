@@ -14,10 +14,13 @@ Vue.use(MintUI)
 import axios from 'axios';
 Vue.prototype.axios = axios;
 
+import store from './store'
+
 
 
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })

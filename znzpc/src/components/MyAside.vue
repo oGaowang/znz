@@ -78,7 +78,7 @@
         background-color: #D3DCE6;
         color: #333;
         height: 100%;
-        width: 200px;
+        width: 100%;
         
         overflow-x: hidden;
         .el-menu{

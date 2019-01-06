@@ -2,11 +2,11 @@
     <div class="my">
         <header>
             <div class="h-l">我的</div>
-            <div class="h-c">杭州装内助有限公司</div>
-            <div class="h-r iconfont icon-more" @click="swtchCom"></div>
+            <div class="h-c">{{companyName}}</div>
+            <div class="h-r iconfont icon-more" @click.stop="swtchCom"></div>
             <transition name="fade">
                 <div class="comList" v-show="comListShow">
-                    <p v-for="(item,index) in organizationList" :key="index" @click="chooseCom(index)">{{item.name}} </p>
+                    <p v-for="(item,index) in organizationList" :key="index" @click.stop="chooseCom(index)">{{item.name}} </p>
                 </div>
             </transition>
         </header>
@@ -15,8 +15,8 @@
                 <div class="m-l">
                     <div class="avatar"></div>
                     <div class="message">
-                        <div class="top">高汪 | 监理</div>
-                        <div class="tel">18626870242</div>
+                        <div class="top">{{userInfo.name}} | {{userInfo.roleName}}</div>
+                        <div class="tel">{{userInfo.mobile}}</div>
                     </div>
                 </div>
                 <div class="m-r">
@@ -47,7 +47,7 @@
                     </div>
                 </section>
                 <section>
-                    <div class="sec-item" @click="$router.push({name:'introduction'})">
+                    <div class="sec-item" @click="introduction">
                         <div class="left">
                             <div class="icon"><img src="../assets/images/swtch.png" alt=""></div>
                             <p>装介绍客户</p>
@@ -115,22 +115,44 @@
 </template>
 
 <script>
+    import {
+        mapState,
+        mapMutations
+    } from 'vuex'
+    import {
+        Toast
+    } from 'mint-ui';
     export default {
         data() {
             return {
                 comListShow: false,
-                organizationId: '4297',
-                userId: '5960',
-                version: '3.4',
-                organizationList: '',
                 companyName: '',
-                index:0,
+                userInfo: {},
             }
+        },
+        computed: {
+            ...mapState({
+                version: 'version',
+                organizationId: 'organizationId',
+                userId: 'userId',
+                organizationList: 'organizationList',
+                companyListIndex: 'companyListIndex',
+                isAdmin: 'isAdmin'
+            }),
         },
         created() {
             this.gainOrganizationList();
+            this.gainUserInfo();
+            this.gainVipInfo();
         },
         methods: {
+            ...mapMutations({
+                getOrganizationList: 'getOrganizationList',
+                getCompanyListIndex: 'getCompanyListIndex',
+                turnOrganizationId: 'turnOrganizationId',
+                tureExpireShow: 'tureExpireShow',
+                getIsAdmin: 'getIsAdmin'
+            }),
             swtchCom() {
                 this.comListShow = !this.comListShow;
             },
@@ -144,13 +166,67 @@
                         version: this.version,
                     }
                 }).then(res => {
-                    this.organizationList = res.data.data;
-                    console.log(this.organizationList)
-                    this.companyName = this.organizationList[0].name
+                    this.getOrganizationList(res.data.data)
+                    this.companyName = this.organizationList[this.companyListIndex].name;
                 })
             },
-            chooseCom(index){
-                console.log(index)
+            gainUserInfo() { //获取用户的信息
+                this.axios({
+                    methods: 'get',
+                    url: 'http://app.zhuangneizhu.com/user/gainUserInfo.do',
+                    params: {
+                        organizationId: this.organizationId,
+                        userId: this.userId,
+                        version: this.version,
+                    }
+                }).then(res => {
+                    if (res.data.code == 11280) {
+                        this.tureExpireShow(true);
+                    } else if (res.data.code == 10000) {
+                        this.tureExpireShow(false);
+                        this.userInfo = res.data.data;
+                        this.getIsAdmin(res.data.data.isAdmin);
+                        console.log(this.isAdmin)
+                    }
+                })
+            },
+            gainVipInfo() { //获取VIP信息
+                this.axios({
+                    methods: 'get',
+                    url: "http://app.zhuangneizhu.com/set/gainVipInfo.do",
+                    params: {
+                        organizationId: this.organizationId,
+                        version: this.version,
+                        userId: this.userId,
+                    },
+                }).then(res => {
+                    console.log(res.data.data)
+                    this.vipInfo = res.data.data.vipInfo;
+                })
+            },
+            chooseCom(index) {
+                this.comListShow = !this.comListShow;
+                this.getCompanyListIndex(index);
+            },
+            introduction() {
+                if (this.isAdmin) {
+                    this.$router.push({
+                        name: 'introduction'
+                    })
+                } else {
+                    Toast({
+                        message: '权限不足，仅对管理员开放',
+                    });
+                }
+            }
+        },
+        watch: {
+            companyListIndex(a) {
+                console.log(a)
+                this.turnOrganizationId(this.organizationList[a].organizationId)
+                this.gainOrganizationList();
+                this.gainUserInfo();
+                this.gainVipInfo();
             }
         }
     }
@@ -172,8 +248,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box; // border-bottom: 1px solid rgb(245, 245, 245);
-            position: relative;
+            box-sizing: border-box;
             .h-l {
                 font-size: 0.36rem;
                 font-weight: 700;
@@ -195,23 +270,21 @@
             }
             .comList {
                 width: 4rem;
-                height: 4rem;
                 background: #fff;
                 position: absolute;
                 right: 0.2rem;
                 top: 0.9rem;
                 box-shadow: 0 0 0.1rem #ccc;
                 color: #333;
+                padding: 0.18rem 0;
+                cursor: pointer;
+                z-index: 20;
                 p {
                     width: 100%;
                     height: 0.68rem;
                     line-height: 0.68rem;
-                    font-size: 0.32rem;
+                    font-size: 0.3rem;
                     padding: 0 0.3rem;
-                }
-                p:active{
-                    color:#3478F7;
-                    background: #99CCFF;
                 }
             }
             .fade-enter-active,
@@ -227,6 +300,7 @@
             width: 100%;
             flex: 1;
             overflow: auto;
+            position: relative;
             .mes {
                 width: 100%;
                 height: 2.4rem;

@@ -7,14 +7,51 @@
         </header>
         <main>
             <div class="title">公司名称：</div>
-            <div class="inp"><input type="text"></div>
-            <div class="btn">确定</div>
+            <div class="inp"><input type="text" v-model="organizationName"></div>
+            <div class="btn" @click="setCompanyName">确定</div>
         </main>
     </div>
 </template>
 
 <script>
-    export default {}
+    import {
+        mapState
+    } from 'vuex'
+    export default {
+        data() {
+            return {
+                organizationName: '',
+            }
+        },
+        computed: {
+            ...mapState({
+                organizationList: 'organizationList',
+                companyListIndex: 'companyListIndex',
+                version: "version",
+                organizationId: 'organizationId',
+                userId: 'userId',
+            })
+        },
+        methods: {
+            setCompanyName() {
+                this.axios({ //设置公司名称
+                    url: "http://app.zhuangneizhu.com/set/setCompanyName.do",
+                    method: "get",
+                    params: {
+                        organizationName: '千纸鹤有限公司',
+                        organizationId: '4297',
+                        userId: '5960',
+                        version: '3.4'
+                    },
+                }).then(res => {
+                    console.log(res)
+                })
+            }
+        },
+        created(){
+            this.organizationName=this.organizationList[this.companyListIndex].name;
+        }
+    }
 </script>
 
 <style lang='scss'>
@@ -59,7 +96,7 @@
                 input {
                     width: 100%;
                     height: 0.8rem;
-                    padding-left:0.2rem;
+                    padding-left: 0.2rem;
                     border: 1px solid #ccc;
                     border-radius: 0.1rem;
                 }
@@ -67,7 +104,7 @@
             .btn {
                 background: rgb(0, 121, 254);
                 height: 0.9rem;
-                width:100%;
+                width: 100%;
                 margin: 0 auto;
                 font-size: 0.32rem;
                 color: #fff;

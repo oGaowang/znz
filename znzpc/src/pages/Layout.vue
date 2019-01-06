@@ -3,7 +3,7 @@
         <header>
             <MyHeader></MyHeader>
         </header>
-        <section>
+        <section class="sec">
             <aside>
                  <MyAside></MyAside>
             </aside>
@@ -43,20 +43,20 @@
             background-color: #31c2a6;
             border-bottom: 2px solid #279b85;
         }
-        section {
+        section.sec {
             flex: 1;
             display: flex;
             aside {
-                
+                width: 200px;
                 height: 100%;
                 color: #333;
                background: rgb(84, 92, 100);
-                overflow-x: hidden;
             }
             main {
                 flex: 1;
                 height: 100%;
                 background: #fff;
+                overflow: auto;
             }
         }
     }
